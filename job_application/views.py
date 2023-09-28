@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .forms import ApplicationForm
 from .models import Form
 from django.contrib import messages
+from django.core.mail import EmailMessage
 
 
 def index(request):
@@ -16,6 +17,10 @@ def index(request):
 
             Form.objects.create(first_name=first_name, last_name=last_name,
                                 email=email, date=date, occupation=occupation)
+
+            message_body = f"Application form received.\nThank you, {first_name} {last_name}"
+            email_message = EmailMessage(subject="Form received", body=message_body, to=[email])
+            email_message.send()
 
             messages.success(request, message="Form submitted successfully.")
 
